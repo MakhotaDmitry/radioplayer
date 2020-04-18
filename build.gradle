@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'application'
+    id 'edu.sc.seis.launch4j' version '2.4.6'
+}
+
+//mainClassName = 'radioplayer.Main'
+mainClassName = 'radioplayer.AppJFrame'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    testImplementation     'junit:junit:4.13'
+    compile group: 'com.googlecode.soundlibs', name: 'jlayer', version: '1.0.1.4'
+    compile group: 'com.formdev', name: 'flatlaf', version: '0.30'
+    compile 'org.xerial:sqlite-jdbc:3.8.11.1'
+    //    runtime group: 'com.formdev', name: 'flatlaf', version: '0.20'
+
+
+}
+
+/**
+ *  Task:   jarSingle
+ *  Desc:
+ */
+task jarSingle (type: Jar) {
+    manifest {
+        attributes  'Implementation-Title':     "$title",
+                    'Implementation-Version':   "$version",
+                    'Main-Class':               "$mainClassName"
+    }
+    //    baseName = "$project.name" + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+
+/**
+ *  Task:   launch4j
+ *  Desc:
+ */
+launch4j {
+    //    //    headerType='console'
+    //    headerType="gui"
+    //    //    mainClassName = "$mainClassName"
+    //    outfile = "RadioPlayer.exe"
+    //    icon = "${projectDir}/src/main/resources/images/icon.ico"
+    //    jar = "${projectDir}/build/libs/radioplayer-1.0.jar"
+    mainClassName = "$mainClassName"
+    icon = "${projectDir}/src/main/resources/images/icon.ico"
+//    jdkPreference = 'jdkOnly'
+    initialHeapSize = 128
+    jreMinVersion = '1.8.0'
+    jreMaxVersion = '1.8.9'
+    maxHeapSize = 512
+    stayAlive = false
+//    bundledJre64Bit = true
+//    bundledJrePath = '../hello-windows/jre8'
+}
